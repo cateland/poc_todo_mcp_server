@@ -23,28 +23,11 @@ function generateId(): string {
   return `todo-${nextId++}`;
 }
 
-// Create the MCP server instance with proper server info
-const server = new McpServer(
-  {
-    name: "todo-manager",
-    version: "1.0.0"
-  },
-  {
-    capabilities: {
-      tools: {
-        listChanged: true  // We support notifications when tool list changes
-      },
-      resources: {
-        subscribe: false,   // We don't support resource subscriptions
-        listChanged: false  // We don't emit resource list change notifications
-      },
-      prompts: {
-        listChanged: false  // We don't emit prompt list change notifications
-      },
-      logging: {}  // We support logging notifications
-    }
-  }
-);
+// Create the MCP server instance
+const server = new McpServer({
+  name: "todo-manager",
+  version: "1.0.0"
+});
 
 // TOOL: Create a new todo
 server.tool(

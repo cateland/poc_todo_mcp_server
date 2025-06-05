@@ -104,68 +104,21 @@ Once connected to your MCP client, you can interact naturally:
 
 ## 🏗️ Architecture & Implementation
 
-### How MCP Discovery Works
-
-MCP uses a **two-phase discovery system** to enable clients to understand what a server offers:
-
-#### 1. **Capabilities Declaration** (Initialization)
-During the connection handshake, the server declares what *types* of features it supports:
-
-```typescript
-const server = new McpServer(
-  {
-    name: "todo-manager",
-    version: "1.0.0"
-  },
-  {
-    capabilities: {
-      tools: {
-        listChanged: true  // Server can notify when tool list changes
-      },
-      resources: {
-        subscribe: false,   // Server doesn't support resource subscriptions
-        listChanged: false  // Server doesn't notify on resource list changes
-      },
-      prompts: {
-        listChanged: false  // Server doesn't notify on prompt list changes
-      },
-      logging: {}  // Server supports logging notifications
-    }
-  }
-);
-```
-
-#### 2. **Feature Discovery** (Operation)
-After initialization, the client discovers *specific* features by calling:
-- `tools/list` - Get all available tools
-- `resources/list` - Get all available resources  
-- `prompts/list` - Get all available prompts
-
-This two-phase approach allows:
-- **Efficient negotiation**: Client knows what to expect
-- **Dynamic discovery**: Client can query for actual available features
-- **Future extensibility**: New capability types can be added
-- **Graceful degradation**: Clients can adapt to server capabilities
-
 ### Modern MCP SDK Patterns
 
 This implementation follows current MCP SDK best practices:
 
 ```typescript
-// Proper server initialization with capabilities
-const server = new McpServer(
-  {
-    name: "todo-manager",
-    version: "1.0.0"
-  },
-  {
-    capabilities: {
-      tools: {},
-      resources: {},
-      prompts: {}
-    }
-  }
-);
+// High-level API - capabilities are automatically discovered
+const server = new McpServer({
+  name: "todo-manager",
+  version: "1.0.0"
+});
+
+// The SDK automatically discovers capabilities based on what you register:
+server.tool("create_todo", schema, handler);      // Adds 'tools' capability
+server.resource("todos://json", handler);         // Adds 'resources' capability  
+server.prompt("daily_report", schema, handler);   // Adds 'prompts' capability
 
 // Comprehensive error handling
 server.tool("create_todo", schema, async (params) => {
@@ -180,6 +133,18 @@ server.tool("create_todo", schema, async (params) => {
   }
 });
 ```
+
+### How Capability Discovery Works
+
+1. **Server Initialization**: Server declares or auto-discovers its capabilities
+2. **Client Connection**: Client connects and receives server capability information during handshake
+3. **Dynamic Discovery**: Client calls these methods to discover available features:
+   - `client.listTools()` - Discover available tools
+   - `client.listResources()` - Discover available resources  
+   - `client.listPrompts()` - Discover available prompts
+4. **Usage**: Client can then call specific tools, read resources, or use prompts
+
+The high-level `McpServer` API automatically handles capability advertisement based on what you actually register, making it much simpler to use.
 
 ### Project Structure
 
