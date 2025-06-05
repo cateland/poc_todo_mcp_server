@@ -1,0 +1,56 @@
+# Cursor MCP Configuration for Todo Server
+
+This project includes a Model Context Protocol (MCP) server for managing todos.
+
+## MCP Server Configuration
+
+Add this configuration to your Cursor settings to enable the todo MCP server:
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "todo-manager": {
+        "command": "node",
+        "args": [
+          "/Users/acateland/projects/todo-mcp-server/dist/index.js"
+        ],
+        "env": {},
+        "cwd": "/Users/acateland/projects/todo-mcp-server"
+      }
+    }
+  }
+}
+```
+
+## Available MCP Features
+
+### Tools (AI can execute):
+- `create_todo` - Create new todos with priority and tags
+- `list_todos` - List todos with filtering by status, priority, and tags  
+- `update_todo` - Update any todo field including completion status
+- `delete_todo` - Remove todos by ID
+- `todo_stats` - Get comprehensive statistics about your todos
+
+### Resources (AI can read):
+- `todos://json` - All todos as JSON data
+- `todos://summary` - Quick summary with counts and metrics
+
+### Prompts (AI templates):
+- `daily_report` - Generate a professional daily todo report
+- `prioritize_tasks` - Get AI assistance with task prioritization
+
+## Usage Examples
+
+Once the MCP server is configured, you can interact with it through Cursor's AI:
+
+- "Create a todo to review the quarterly report with high priority"
+- "Show me all high priority pending todos"
+- "Generate a daily report for today"
+- "Help me prioritize my current tasks"
+
+## Development Commands
+
+- `npm run build` - Build the TypeScript code
+- `npm run dev` - Run in development mode
+- `npm test` - Test with MCP Inspector 

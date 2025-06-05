@@ -1,0 +1,14 @@
+{
+  "mcp": {
+    "servers": {
+      "todo-manager": {
+        "command": "node",
+        "args": [
+          "/Users/acateland/projects/todo-mcp-server/dist/index.js"
+        ],
+        "env": {},
+        "cwd": "/Users/acateland/projects/todo-mcp-server"
+      }
+    }
+  }
+} 
