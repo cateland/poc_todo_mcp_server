@@ -23,6 +23,18 @@ function generateId(): string {
   return `todo-${nextId++}`;
 }
 
+// Centralized error handling utility
+function handleToolError(error: unknown, context: string) {
+  const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+  return {
+    content: [{
+      type: "text" as const,
+      text: `❌ Error ${context}: ${errorMessage}`
+    }],
+    isError: true
+  };
+}
+
 // Create the MCP server instance
 const server = new McpServer({
   name: "todo-manager",
@@ -63,13 +75,7 @@ server.tool(
         }]
       };
     } catch (error) {
-      return {
-        content: [{
-          type: "text",
-          text: `❌ Error creating todo: ${error instanceof Error ? error.message : 'Unknown error'}`
-        }],
-        isError: true
-      };
+      return handleToolError(error, "creating todo");
     }
   }
 );
@@ -135,13 +141,7 @@ server.tool(
         }]
       };
     } catch (error) {
-      return {
-        content: [{
-          type: "text",
-          text: `❌ Error listing todos: ${error instanceof Error ? error.message : 'Unknown error'}`
-        }],
-        isError: true
-      };
+      return handleToolError(error, "listing todos");
     }
   }
 );
@@ -191,13 +191,7 @@ server.tool(
         }]
       };
     } catch (error) {
-      return {
-        content: [{
-          type: "text",
-          text: `❌ Error updating todo: ${error instanceof Error ? error.message : 'Unknown error'}`
-        }],
-        isError: true
-      };
+      return handleToolError(error, "updating todo");
     }
   }
 );
@@ -231,13 +225,7 @@ server.tool(
         }]
       };
     } catch (error) {
-      return {
-        content: [{
-          type: "text",
-          text: `❌ Error deleting todo: ${error instanceof Error ? error.message : 'Unknown error'}`
-        }],
-        isError: true
-      };
+      return handleToolError(error, "deleting todo");
     }
   }
 );
@@ -292,13 +280,7 @@ server.tool(
         }]
       };
     } catch (error) {
-      return {
-        content: [{
-          type: "text",
-          text: `❌ Error generating statistics: ${error instanceof Error ? error.message : 'Unknown error'}`
-        }],
-        isError: true
-      };
+      return handleToolError(error, "generating statistics");
     }
   }
 );
